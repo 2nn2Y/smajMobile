@@ -1,0 +1,216 @@
+$reddot_width = 8px
+$reddot_width_s = 6px
+
+@media (-webkit-min-device-pixel-ratio: 1.5),(min-device-pixel-ratio: 1.5)
+  .border-1px
+    &:after
+      -webkit-transform scaleY(0.7)
+      transform scaleY(0.7)
+
+  .border-1px-top
+    &:after
+      -webkit-transform scaleY(0.7)
+      transform scaleY(0.7)
+
+@media (-webkit-min-device-pixel-ratio: 2.0),(min-device-pixel-ratio: 2.0)
+  .border-1px
+    &:after
+      -webkit-transform scaleY(0.5)
+      transform scaleY(0.5)
+
+@media (-webkit-min-device-pixel-ratio: 3.0),(min-device-pixel-ratio: 3.0)
+  .border-1px
+    &:after
+      -webkit-transform scaleY(0.33)
+      transform scaleY(0.33)
+
+.clearfix
+  display inline-block
+  &:after
+    display block
+    content "."
+    height 0
+    line-height 0
+    clear both
+    visibility hidden
+
+border-1px($color = #eee, $pos = bottom, $height = 1px)
+  position relative
+  &:after
+    display block
+    position absolute
+    left 0
+    bottom 0
+    width 100%
+    border-top $height solid $color
+    content ' '
+
+border-none()
+  &:after
+    display none
+
+
+.yt-reddot, .yt-reddot-border, .yt-reddot-s
+  position relative
+
+.yt-float-l
+  float left
+
+.yt-float-r
+  float right
+
+.yt-reddot:after, .yt-reddot-border:after, .yt-reddot-s:after
+  content ''
+  position absolute
+  display block
+  width $reddot_width
+  height $reddot_width
+  background-color #f74c31
+  border-radius 5px
+  right -3px
+  top -3px
+  background-clip padding-box
+
+.yt-reddot-border:before
+  content ''
+  position absolute
+  display block
+  width $reddot_width
+  height $reddot_width
+  background-color #fff
+  border-radius 5px
+  right -4px
+  top -4px
+  background-clip padding-box
+  padding 1px
+
+.yt-reddot-s:after
+  width $reddot_width_s
+  height $reddot_width_s
+  top -5px
+  right -5px
+
+.yt-center
+  text-align center
+
+.yt-ellipsis
+  white-space nowrap
+  overflow hidden
+  text-overflow ellipsis
+
+.yt-mask
+  position absolute
+  top 0
+  left 0
+  right 0
+  bottom 0
+  z-index 6000
+  background rgba(0, 0, 0, 0.5)
+  transition all .3s ease
+
+.yt-utils-toast
+  position fixed
+  display inline-block
+  white-space nowrap
+  z-index 1000
+  min-width 100px
+  max-width 100%
+  text-align center
+  top 15%
+  left 50%
+  padding 0px 10px
+  font-size 15px
+  line-height 2em
+  border-radius 1em
+  color #fff
+  overflow hidden
+  background-color #ff8ba7
+  transform translate3d(-50%, -50%, 0)
+  box-shadow 1px 0px 3px #ff8ba7, -1px 0px 3px #ff8ba7
+
+.yt-utils-toast[remove=true]
+  display none
+
+.yt-noInfo
+  text-align center
+  line-height 35px
+  font-size 14px
+
+.yt-scroll
+  width 100%
+  height 100%
+  overflow-x hidden
+  overflow-y auto
+  &::-webkit-scrollbar
+    width 0
+    height 0
+
+.yt-hide-scroll
+  overflow-x hidden
+  overflow-y auto
+  &::-webkit-scrollbar
+    width 0
+    height 0
+
+
+.yt-btm
+  border-bottom solid 1px #eee
+
+.yt-input
+  border 0
+  outline 0
+  &:focus
+    border 0
+    outline 0
+
+.ytMap-sensor
+  cursor: pointer
+  display: table
+  table-layout: fixed
+  background-color: #fff
+  color: #000
+  position: relative
+
+.ytMap-sensorTit
+  display: table-cell
+  vertical-align: middle
+  text-align: center
+  color: #ff77bd
+  position: relative
+  white-space: nowrap
+  font-size 16px
+
+.ytMap-sensorTit[state="正常"]
+  color #ff77bd
+
+
+
+.ytMap-sensorP
+  padding: 4px
+  background-color: currentColor
+
+.ytMap-sensorS
+  color: #fff
+  text-shadow: none
+
+.ytMap-sensorI
+  width: 0
+  height: 0
+  border: 6px solid transparent
+  border-top-color: currentColor
+  position: absolute
+  bottom: -12px
+  left: 7px
+
+.ytMap-sensorName
+  display: table-cell
+  vertical-align: middle
+  min-width: 5em
+  max-width: 12em
+  overflow: hidden
+  padding: 4px 8px
+  white-space: nowrap
+  text-overflow: ellipsis
+  font-weight: normal
+  text-shadow: none
+  font-size: 14px

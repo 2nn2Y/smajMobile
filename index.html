@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, inital-scale=1.0, maximum-scale=1.0, minimun-scale=1.0, user-scalable=no">
+  <title>y</title>
+  <link rel="stylesheet" href="./static/css/reset.css">
+  <link rel="stylesheet" href="./static/css/iconfont.css">
+  <script src="./static/js/aes.js"></script>
+</head>
+<body>
+<div id="app"></div>
+<script type="text/javascript" src="./static/js/jquery-1.11.3.min.js"></script>
+<script src="./static/js/jquery.signalR-2.2.2.min.js"></script>
+<script src="http://218.92.104.102:8001/signalr/hubs"></script>
+<script>
+  if (window.plus) {
+    plusReady()
+  } else {
+    document.addEventListener('plusready', plusReady, false)
+  }
+
+  function plusReady() {
+    window.plus.push.addEventListener('receive', function (msg) {
+    }, false);
+    window.plus.push.addEventListener('click', function (msg) {
+      var obj = {}
+      var User = window.app.$store.state.user
+      var data = window.JSON.parse(msg.payload)
+      switch (msg.title) {
+        case '待启动事故':
+          obj = {
+            path: '/sgjk',
+            query: {
+              AccidentId: data.AccidentId,
+              EnterpriseId: data.EnterpriseId,
+              userId: User.id,
+              isStart: false
+            }
+          }
+          break
+        case '待审核指令':
+          obj = {
+            path: '/zlzgsh',
+            query: {
+              company: data.EnterpriseName,
+              companyId: data.EnterpriseId,
+              taskId: data.TaskId,
+              instructionId: data.InstructionId
+            }
+          }
+          break
+        case '待复查任务':
+          obj = {
+            path: '/zgfcrw',
+            query: {
+              userId: User.id,
+              enterpriseId: data.EnterpriseId,
+              enterprise: data.EnterpriseName,
+              inspectTaskId: data.TaskId,
+              taskId: data.ReviewTaskId
+            }
+          }
+          break
+        case '通知公告':
+          obj = {
+            path: '/ZXTZdetail',
+            query: {
+              announcementId: data.AnnouncementId,
+              id: data.BulletinReadingRecordId
+            }
+          }
+          break
+      }
+      window.app.$router.push(obj)
+    }, false);
+  }
+
+  window.MessagePush = function (options) {
+    var userId = options.userId
+    var userName = options.userName
+    var conFail = options.fail
+    var getMessage = options.getMessage
+
+    var $ = window.$
+    //创建连接
+    var chat = $.connection.chatHub;
+    //首先需要指定hub根地址
+    $.connection.hub.qs = {
+      "clientUserId": userId
+    }
+    chat.connection.url = "http://218.92.104.102:8001/signalr";
+    // 建立开启连接，并调用服务器方法
+    chat.client.getMessage = getMessage
+
+    $.connection.hub.start({
+      xdomain: true
+    }).done(function () {
+      chat.server.sendMessage(userId);
+    }).fail(conFail);
+  }
+
+  window.createLocalPushMsg = function (obj) {
+    var options = {
+      cover: false,
+      when: parseInt(obj.DateTime),
+      sound: 'system',
+      title: obj.title
+    }
+    var str = obj.str
+    var data = obj.data
+    // window.plus.push.clear()
+    window.plus.push.createMessage(str, window.JSON.stringify(data), options)
+    switch (window.plus.os.name) {
+      case 'iOS':
+        if (window.plus.device.model.indexOf('iPhone') >= 0) {
+          // this.plus.device.vibrate()
+        } else {
+        }
+        break
+      default:
+        // this.plus.device.vibrate()
+        break
+    }
+  }
+
+  window.init = function (User) {
+    window.MessagePush.call(window, {
+      userName: User.userName,
+      userId: User.id,
+      fail: function (e) {
+        console.log(window.JSON.stringify(e))
+      },
+      getMessage: function (res) {
+        console.log(res)
+        res = window.JSON.parse(res)
+        window.createLocalPushMsg({
+          str: res.Message,
+          time: res.DateTime,
+          title: res.MsgType,
+          data: res
+        })
+      }
+    })
+  }
+</script>
+<!-- built files will be auto injected -->
+</body>
+</html>
+
